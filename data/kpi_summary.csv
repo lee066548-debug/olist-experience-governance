@@ -1,0 +1,2 @@
+total_orders,delivered_orders,delivery_rate,avg_review_score_all,avg_review_score_delivered,bad_rate_all,bad_rate_delivered,late_rate_1d,late_rate_any_delay,avg_days_fulfill,avg_days_to_carrier,gmv_product,gmv_with_freight
+99441,96478,0.9702,4.09,4.16,0.1469,0.1276,0.0678,0.0811,12.56,3.23,13591643.70,15843553.24
