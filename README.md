@@ -10,6 +10,8 @@
 
 [![Dashboard preview](images/dashboard.png)](https://public.tableau.com/views/Olist_17945512696070/1)
 
+*Live Tableau dashboard. Its timing chart uses three latency buckets (4.29 / 3.29 / 1.86); the analysis below uses four (4.29 / 3.51 / 2.32 / 1.73) — see Appendix A of the report.*
+
 **Links:** [Live dashboard](https://public.tableau.com/app/profile/43153393) · [Full report (PDF)](report/Olist电商体验治理分析报告_V2.pdf) · [Raw data (Kaggle)](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce)
 
 ---
