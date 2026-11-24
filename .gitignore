@@ -1,0 +1,26 @@
+# ---- raw data (download from Kaggle, never commit) ----
+data/olist_*.csv
+data/product_category_name_translation.csv
+olist_data/
+*.db
+
+# ---- large derived files ----
+wide_orders.csv
+*.twbx
+*.twb
+
+# ---- secrets ----
+.env
+config.py
+
+# ---- python ----
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# ---- OS / editor ----
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
