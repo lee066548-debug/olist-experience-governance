@@ -24,6 +24,10 @@ venv/
 Thumbs.db
 .vscode/
 .idea/
+~$*
+*.tmp
+report/~*
+report/*.docx
 
 # ---- analysis artefacts ----
 metrics.json
