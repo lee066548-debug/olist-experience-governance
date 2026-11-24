@@ -2,8 +2,11 @@
 import json, re, unicodedata, os
 import pandas as pd, numpy as np
 
-BASE = r'C:\Users\李\Desktop\李志豪的获奖\个人项目\Olist体验治理分析\github-repo\data'
-OUT  = r'C:\Users\李\Documents\deepseek-harness\default-workspace\olist_review'
+import os
+HERE = os.path.dirname(os.path.abspath(__file__))
+ROOT = os.path.dirname(HERE)
+BASE = os.environ.get('OLIST_DATA_DIR', os.path.join(ROOT, 'data'))
+OUT  = os.environ.get('OLIST_OUT_DIR', ROOT)
 M = json.load(open(os.path.join(OUT,'metrics.json'), encoding='utf-8'))
 
 orders = pd.read_csv(os.path.join(BASE,'olist_orders_dataset.csv'))

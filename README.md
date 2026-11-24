@@ -194,7 +194,17 @@ mysql -u "$MYSQL_USER" -p olist < sql/02b_patch_is_late_1d.sql
 mysql -u "$MYSQL_USER" -p olist < sql/03_dashboard_queries_mysql.sql
 mysql -u "$MYSQL_USER" -p olist < sql/04_governance_queries_mysql.sql
 python sql/05_text_topics.py
+
+# 4) optional: rebuild the metrics, figures and the 12-page report
+pip install python-docx pillow
+python analysis/compute_all.py     # -> metrics.json
+python analysis/addendum.py        # text attribution + timing cross-tabs
+python analysis/make_charts.py     # -> chart_*.png
+python analysis/build_report.py    # -> DOCX (export to PDF)
 ```
+
+The analysis scripts default to `./data` and the repository root;
+set `OLIST_DATA_DIR` / `OLIST_OUT_DIR` to override either.
 
 Expected checkpoints: `total_orders = 99,441`; `delivery_rate = 0.9702`; `late_rate_1d = 0.0678`; `avg_review_score = 4.09`.
 

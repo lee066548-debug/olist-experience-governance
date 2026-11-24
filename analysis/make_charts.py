@@ -1,9 +1,12 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 """Draw the report charts with Pillow (no matplotlib available)."""
 import json, os
 from PIL import Image, ImageDraw, ImageFont
 
-OUT = r'C:\Users\李\Documents\deepseek-harness\default-workspace\olist_review'
+import os
+HERE = os.path.dirname(os.path.abspath(__file__))
+ROOT = os.path.dirname(HERE)
+OUT = os.environ.get('OLIST_OUT_DIR', ROOT)
 M = json.load(open(os.path.join(OUT, 'metrics.json'), encoding='utf-8'))
 
 FONT = r'C:\Windows\Fonts\msyh.ttc'
@@ -47,7 +50,7 @@ def legend(d, items, x, y, gap=190):
 
 # ---------------------------------------------------------------- 1. ladder
 def chart_ladder():
-    img, d = canvas('差评率随时延陡增：准时 9.2%，迟到 7 天以上 78.3%',
+    img, d = canvas('差评率随延迟上升：准时 9.2%，延迟 4 天以上 74.7%',
                     '纵轴：差评率（1–2 星 / 有评价订单）；柱内小字：该档平均评分')
     x0, y0, x1, y1 = 150, 190, W - 90, H - 170
     yaxis(d, x0, y0, x1, y1, 100, 5)
@@ -178,3 +181,4 @@ def chart_monthly():
 for fn in (chart_ladder, chart_state, chart_topic, chart_promise, chart_monthly):
     fn()
 print('charts done')
+

@@ -1,4 +1,4 @@
-﻿# ---- raw data (download from Kaggle, never commit) ----
+# ---- raw data (download from Kaggle, never commit) ----
 data/olist_*.csv
 data/product_category_name_translation.csv
 olist_data/
@@ -19,12 +19,14 @@ __pycache__/
 .venv/
 venv/
 
-# ---- OS / editor / office ----
+# ---- OS / editor ----
 .DS_Store
 Thumbs.db
 .vscode/
 .idea/
-~$*
-*.tmp
-report/~*
-report/*.docx
+
+# ---- analysis artefacts ----
+metrics.json
+chart_*.png
+topic_summary.csv
+*_V2.docx

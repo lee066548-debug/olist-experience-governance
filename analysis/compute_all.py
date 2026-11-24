@@ -5,8 +5,11 @@ Writes metrics.json + topic_summary.csv next to this script.
 import json, re, unicodedata, os
 import pandas as pd, numpy as np
 
-BASE = r'C:\Users\李\Desktop\李志豪的获奖\个人项目\Olist体验治理分析\github-repo\data'
-OUT  = r'C:\Users\李\Documents\deepseek-harness\default-workspace\olist_review'
+import os
+HERE = os.path.dirname(os.path.abspath(__file__))
+ROOT = os.path.dirname(HERE)
+BASE = os.environ.get('OLIST_DATA_DIR', os.path.join(ROOT, 'data'))
+OUT  = os.environ.get('OLIST_OUT_DIR', ROOT)
 os.makedirs(OUT, exist_ok=True)
 
 orders = pd.read_csv(os.path.join(BASE, 'olist_orders_dataset.csv'))
@@ -71,8 +74,8 @@ M['late_any_rate'] = float((d.delay > 0).sum() / d.delay.notna().sum())
 M['late_any_n'] = int((d.delay > 0).sum())
 
 # 4-bucket ladder (this is the canonical one)
-bins = [-1e9, 1, 3, 7, 1e9]
-labels = ['准时或提前(<1天)', '延迟1-3天', '延迟3-7天', '延迟7天以上']
+bins = [-1e9, 1, 4, 1e9]
+labels = ['准时或提前(<1天)', '延迟1-4天', '延迟4天以上']
 dd = d.dropna(subset=['delay']).copy()
 dd['bucket'] = pd.cut(dd.delay, bins=bins, labels=labels, right=False)
 g = dd.groupby('bucket', observed=True).agg(orders=('order_id','size'), reviewed=('sc','count'),
@@ -84,6 +87,11 @@ M['ladder'] = [{'bucket': str(i), 'orders': int(r.orders), 'share': float(r.shar
                 'reviewed': int(r.reviewed), 'avg_score': float(r.avg_score),
                 'bad': int(r.bad), 'bad_rate': float(r.bad_rate)} for i, r in g.iterrows()]
 M['ladder_checksum_orders'] = int(g.orders.sum())
+_l4 = dd.delay >= 4
+M['late4'] = {'n': int(_l4.sum()), 'share': float(_l4.mean()),
+               'bad': int(((dd.sc <= 2) & _l4).sum()),
+               'bad_share': float(((dd.sc <= 2) & _l4).sum() / (dd.sc <= 2).sum()),
+               'bad_rate': float((dd[_l4].sc <= 2).sum() / dd[_l4].sc.notna().sum())}
 
 # attribution
 bad = d[d.sc <= 2]
@@ -281,4 +289,6 @@ print(json.dumps({k: M[k] for k in ['total_orders','delivered','avg_score_all','
                  ensure_ascii=False, indent=2))
 print('TOPICS'); print(pd.DataFrame(M['text']['topics']).to_string())
 print('LADDER'); print(pd.DataFrame(M['ladder']).to_string())
+
+
 
