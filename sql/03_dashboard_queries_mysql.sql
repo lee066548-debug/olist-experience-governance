@@ -44,7 +44,7 @@ ORDER BY month;
 
 -- ------------------------------------------------------------
 -- 图 2「Delivery Delay Breakdown」（环形图）
--- 与看板一致：按 days_vs_estimate 四档 + 未签收
+-- 看板环形图用四档；图 3 的评分图和报告用三档，两者对应不同图表，不要混用
 -- ------------------------------------------------------------
 SELECT
     CASE
@@ -66,16 +66,14 @@ ORDER BY delay_bucket;
 
 -- ------------------------------------------------------------
 -- 图 3「Review Score Delivery Timing」
--- 【就是这张图和报告对不上的原因】看板现在用的是旧三档（<1 / <4 / >=4），
--- 本查询给出正确的四档；把 Tableau 计算字段换成附录 B 的公式即可。
+-- 口径与看板和报告一致：三档（<1 天 / 1–4 天 / ≥4 天）
 -- ------------------------------------------------------------
 SELECT
     CASE
-        WHEN days_vs_estimate IS NULL THEN '5 未签收'
+        WHEN days_vs_estimate IS NULL THEN '4 未签收'
         WHEN days_vs_estimate <  1    THEN '1 准时或提前'
-        WHEN days_vs_estimate <  3    THEN '2 延迟1-3天'
-        WHEN days_vs_estimate <  7    THEN '3 延迟3-7天'
-        ELSE                               '4 延迟7天以上'
+        WHEN days_vs_estimate <  4    THEN '2 延迟1-4天'
+        ELSE                               '3 延迟4天以上'
     END                                                             AS delay_bucket,
     COUNT(*)                                                        AS orders,
     ROUND(AVG(review_score), 2)                                     AS avg_score,
@@ -84,7 +82,7 @@ FROM wide_orders
 WHERE order_status = 'delivered'
 GROUP BY delay_bucket
 ORDER BY delay_bucket;
--- 预期：4.29/9.2% → 3.51/25.4% → 2.32/61.3% → 1.73/78.3%
+-- 预期：4.29/9.2% → 3.29/32.1% → 1.86/74.7%
 
 
 -- ------------------------------------------------------------

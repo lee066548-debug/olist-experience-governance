@@ -1,6 +1,6 @@
 # Olist Experience Governance: Review Attribution & Delivery Intervention
 
-**Why do 5% of orders produce 30% of the bad reviews — and what can be fixed before delivery, not after?**
+**Why do 5% of orders produce 28% of the bad reviews — and what can be fixed before delivery, not after?**
 
 ![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?logo=mysql&logoColor=white)
@@ -10,7 +10,7 @@
 
 [![Dashboard preview](images/dashboard.png)](https://public.tableau.com/views/Olist_17945512696070/1)
 
-*Live Tableau dashboard. Its timing chart uses three latency buckets (4.29 / 3.29 / 1.86); the analysis below uses four (4.29 / 3.51 / 2.32 / 1.73) — see Appendix A of the report.*
+*Live Tableau dashboard (three latency buckets: 4.29 / 3.29 / 1.86 — the same definition used throughout this repository).*
 
 **Links:** [Live dashboard](https://public.tableau.com/app/profile/43153393) · [Full report (PDF)](report/Olist电商体验治理分析报告_V2.pdf) · [Raw data (Kaggle)](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce)
 
@@ -20,7 +20,7 @@
 
 | # | Finding | Evidence |
 |---|---|---|
-| 1 | **5% of orders generate 30% of the bad reviews.** Lateness is the largest controllable lever. | Orders ≥3 days late are 5.3% of the base but 29.7% of all 1–2★ reviews; bad-review rate **62.3%** for late orders vs **9.2%** on time (6.8×) |
+| 1 | **5% of orders generate 28% of the bad reviews.** Lateness is the largest controllable lever. | Orders ≥4 days late are 4.8% of the base but 27.7% of all 1–2★ reviews; bad-review rate **62.3%** for late orders (>1 day) vs **9.2%** on time (6.8×) |
 | 2 | **The effect survives controls.** It is not a seller-mix or category-mix artefact. | Within-seller: **54/54** sellers worse, **+53.2pp**; within-category: **29/29**, **+51.7pp** |
 | 3 | **But lateness explains only ~28% of bad reviews.** | PAF = **27.6%**; text attribution: logistics **43.3%**, product **24.0%**, service/refund **8.2%**, no reason given **24.5%** |
 | 4 | **RJ is slow, not undelivered.** The fix is lead time, not delivery rate. | RJ delivered **96.1%** vs SP **97.0%**, but late **12.1%** vs **4.5%**; **60%** of the RJ–SP review gap is explained by the late rate |
@@ -71,11 +71,10 @@ Raw CSVs are **not committed** — download them from Kaggle into `sql/olist_dat
 | Bucket | Orders | Share | Avg score | Bad-review rate |
 |---|---:|---:|---:|---:|
 | On time / early (<1 day) | 89,936 | 93.2% | 4.29 | 9.2% |
-| Late 1–3 days | 1,370 | 1.4% | 3.51 | 25.4% |
-| Late 3–7 days | 1,819 | 1.9% | 2.32 | 61.3% |
-| Late ≥7 days | 3,345 | 3.5% | 1.73 | 78.3% |
+| Late 1–4 days | 1,870 | 1.9% | 3.29 | 32.1% |
+| Late ≥4 days | 4,664 | 4.8% | 1.86 | 74.7% |
 
-The tolerance threshold sits at **1 day** (9.2% → 25.4%), not 3 days. Above 3 days, a bad review is close to certain.
+The tolerance threshold sits at **1 day** (9.2% → 32.1%); beyond 4 days a bad review is close to certain. These are the same three buckets the dashboard uses.
 
 ### 2. The effect survives seller and category controls
 
@@ -119,7 +118,7 @@ Promise 23.7 days, actual 12.6 days, buffer 11.2 days. Late rate by promise wind
 
 ### 6. Two claims we deliberately dropped
 
-- "6.8% of orders explain **most** bad reviews" → they explain **~30%**.
+- "6.8% of orders explain **most** bad reviews" → they explain **~28%**.
 - "One late delivery loses the customer" → repeat rate is 3.45% (late) vs 3.17% (on time); no detectable penalty. With 96.9% one-time buyers, retention is not measurable from this dataset.
 
 ---
@@ -205,7 +204,7 @@ On Windows PowerShell use `$env:MYSQL_PASSWORD="..."` instead of `export`.
 
 ## What changed in V2
 
-- Delay buckets standardised to **four** buckets (4.29 / 3.51 / 2.32 / 1.73). The old three-bucket version (4.29 / 3.29 / 1.86) was correct for its own cuts but conflicted with the report table.
+- Delay buckets kept at **three** (4.29 / 3.29 / 1.86), matching the dashboard; report, SQL and dashboard now share one definition.
 - SP / RJ delivery rates corrected to **97.0% / 96.1%** (previously 97.6% / 94.7%, not reproducible from raw data).
 - Added: seller and category controls, PAF, RJ decomposition, promise-window analysis, review-text attribution, seller risk rule.
 - Replaced the unsupported "most bad reviews" and "late delivery kills retention" claims with tested statements.
